@@ -53,3 +53,23 @@ test('desktop: side rail with brand mark, two-column grid, rail on every page', 
   await expect(nav).toBeVisible();
   expect(await noHorizontalScroll(page)).toBe(true);
 });
+
+test('desktop: rail layout is identical on every page — mark centered, Support pinned to the bottom', async ({ page }, info) => {
+  test.skip(isMobile(info), 'desktop layout');
+  await page.setViewportSize({ width: 1280, height: 800 });
+  const positions: string[] = [];
+  for (const route of ['#/', '#/favorites', '#/settings', '#/support', '#/launch/f9-1']) {
+    await page.goto(`./${route}`);
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    const nav = page.getByRole('navigation', { name: 'Primary' });
+    const rail = (await nav.boundingBox())!;
+    const mark = (await nav.getByRole('img', { name: 'SpaceWatch' }).boundingBox())!;
+    const support = (await nav.getByTestId('support-link').boundingBox())!;
+    const railCenter = rail.x + rail.width / 2;
+    expect(Math.abs(mark.x + mark.width / 2 - railCenter), `mark centered on ${route}`).toBeLessThanOrEqual(1);
+    expect(Math.abs(support.x + support.width / 2 - railCenter), `support centered on ${route}`).toBeLessThanOrEqual(1);
+    expect(rail.y + rail.height - (support.y + support.height), `support at bottom on ${route}`).toBeLessThanOrEqual(24);
+    positions.push(`${Math.round(mark.x)},${Math.round(mark.y)},${Math.round(support.y)}`);
+  }
+  expect(new Set(positions).size).toBe(1);
+});
