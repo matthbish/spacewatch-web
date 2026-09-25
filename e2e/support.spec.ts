@@ -39,10 +39,21 @@ test('the support page does not link to itself on mobile, and marks the rail lin
   }
 });
 
-test('the support page sends sponsors to GitHub Sponsors in a new tab', async ({ page }) => {
+test('the support page offers GitHub Sponsors and Ko-fi, each in a new tab', async ({ page }) => {
   await page.goto('./#/support');
-  const sponsor = page.getByRole('link', { name: 'Sponsor on GitHub (opens in a new tab)' });
-  await expect(sponsor).toHaveAttribute('href', 'https://github.com/sponsors/matthbish?frequency=recurring');
-  await expect(sponsor).toHaveAttribute('target', '_blank');
-  await expect(sponsor).toHaveAttribute('rel', 'noopener noreferrer');
+  const options = page.getByTestId('support-option');
+  await expect(options).toHaveCount(2);
+  const github = page.getByRole('link', { name: /Sponsor on GitHub \(opens in a new tab\)/ });
+  const kofi = page.getByRole('link', { name: /Tip on Ko-fi \(opens in a new tab\)/ });
+  await expect(github).toHaveAttribute('href', 'https://github.com/sponsors/matthbish?frequency=recurring');
+  await expect(kofi).toHaveAttribute('href', 'https://ko-fi.com/matthewbishop');
+  for (const link of [github, kofi]) {
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  }
+  // Equal-weight choices: same size, whichever layout the viewport gets.
+  const [a, b] = await Promise.all([github.boundingBox(), kofi.boundingBox()]);
+  expect(a!.width).toBeCloseTo(b!.width, 0);
+  expect(a!.height).toBeCloseTo(b!.height, 0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });

@@ -14,10 +14,13 @@ export const LAUNCH_HISTORY_RETENTION_HOURS = 24 * 7;
 export const API_URL = 'https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=30&mode=detailed';
 
 /**
- * Where the Support page's sponsor button goes. Any provider works (GitHub Sponsors, Ko-fi, a
- * Stripe payment link, PayPal.me …) — it's just a URL.
+ * The Support page's donation options, in display order. Provider-agnostic: each is just a label,
+ * a one-line hint to help people pick, and a URL (Stripe payment links, PayPal.me … work too).
  */
-export const SUPPORT_URL = 'https://github.com/sponsors/matthbish?frequency=recurring';
+export const SUPPORT_OPTIONS: { label: string; hint: string; url: string }[] = [
+  { label: 'Sponsor on GitHub', hint: 'Monthly or one-time, with a GitHub account', url: 'https://github.com/sponsors/matthbish?frequency=recurring' },
+  { label: 'Tip on Ko-fi', hint: 'One-time or monthly, by card or PayPal — no account needed', url: 'https://ko-fi.com/matthewbishop' },
+];
 
 export const REPO_URL = 'https://github.com/matthbish/spacewatch-web';
 
