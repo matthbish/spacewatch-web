@@ -113,10 +113,13 @@ test('the refresh button shows it is working and ignores taps until done', async
   await page.goto('./');
   await expect(page.getByTestId('launch-card').first()).toBeVisible();
   let calls = 0;
+  let release!: () => void;
+  const released = new Promise<void>((r) => { release = r; });
   await page.unroute('https://ll.thespacedevs.com/**');
+  // Held until the taps are done: a fixed delay can expire first on a busy CI runner.
   await page.route('https://ll.thespacedevs.com/**', async (route) => {
     calls++;
-    await new Promise((r) => setTimeout(r, 600));
+    await released;
     await route.fulfill({ contentType: 'application/json', body: JSON.stringify({ results: [] }) });
   });
 
@@ -127,6 +130,7 @@ test('the refresh button shows it is working and ignores taps until done', async
   await expect(busy).toHaveAttribute('aria-busy', 'true');
   await expect(busy).toHaveClass(/is-spinning/);
   for (let i = 0; i < 5; i++) await busy.click({ force: true });
+  release();
 
   await expect(page.getByRole('status').getByText('Launch data updated')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Refresh launch data' })).toBeEnabled();
