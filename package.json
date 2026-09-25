@@ -1,0 +1,35 @@
+{
+  "name": "spacewatch-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SpaceWatch — a quiet, local-first tracker for upcoming rocket launches. Web/PWA edition.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "check": "npm run lint && npm test && npm run build && npm run e2e"
+  },
+  "dependencies": {
+    "preact": "^10.29.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@material-design-icons/svg": "^0.14.15",
+    "@playwright/test": "^1.63.0",
+    "@preact/preset-vite": "^2.10.6",
+    "@testing-library/preact": "^3.2.4",
+    "@types/node": "^26.6.2",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0",
+    "jsdom": "^29.1.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.70.1",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
+  }
+}
