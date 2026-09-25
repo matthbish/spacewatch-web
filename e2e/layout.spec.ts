@@ -92,3 +92,17 @@ test('desktop: rail layout is identical on every page — mark centered, Support
   }
   expect(new Set(positions).size).toBe(1);
 });
+
+test('desktop: the rail Install and Support pills are the same size', async ({ page }, info) => {
+  test.skip(isMobile(info), 'desktop layout');
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('./');
+  const nav = page.getByRole('navigation', { name: 'Primary' });
+  const [install, support] = await Promise.all([
+    nav.getByTestId('install-link').boundingBox(),
+    nav.getByTestId('support-link').boundingBox(),
+  ]);
+  expect(install!.width).toBeCloseTo(support!.width, 0);
+  expect(install!.height).toBeCloseTo(support!.height, 0);
+  expect(install!.x).toBeCloseTo(support!.x, 0);
+});

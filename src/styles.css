@@ -185,7 +185,9 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
   .nav__brand { display: flex; margin-bottom: 28px; border-radius: 12px; }
   .nav__items { flex-direction: column; gap: 12px; height: auto; }
   .nav__item { height: 64px; width: var(--rail-width); }
-  .nav__support { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: auto; }
+  /* Fixed-width column with stretched pills, so Install and Support borders match exactly. */
+  .nav__support { display: flex; flex-direction: column; align-items: stretch; gap: 8px; width: 72px; margin-top: auto; }
+  .nav__support .pill-link { justify-content: center; }
   .app { padding-left: var(--rail-width); }
   .main, .app.is-top-level .main { padding-bottom: 40px; }
 }
