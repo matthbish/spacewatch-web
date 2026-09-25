@@ -1,7 +1,7 @@
 /**
- * The SpaceWatch mark — point of light, rising trail, open halo ring — traced from
- * branding/icon.png's exact geometry (1536px canvas), always on its own near-black field so it
- * reads identically in light and dark themes.
+ * The SpaceWatch mark — point of light, rising trail, open halo ring — in the same geometry as
+ * the app icons (1536px canvas), always on its own near-black field so it reads identically in
+ * light and dark themes.
  */
 export function BrandMark({ size = 32 }: { size?: number }) {
   return (

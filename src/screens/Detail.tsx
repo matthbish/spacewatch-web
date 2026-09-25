@@ -13,7 +13,7 @@ import { isFavorite, setFavorite, showToast, useNow, useStore } from '../store';
 
 /**
  * Launch Library webcast links are often dead. A no-cors HEAD can't read the status, but it does
- * reject for a dead host — the same ceiling the Android app's HEAD check had for removed videos.
+ * reject for a dead host. ponytail: a removed video on a live host (e.g. YouTube) still passes.
  */
 function useReachable(url: string | null): boolean {
   const [ok, setOk] = useState(false);

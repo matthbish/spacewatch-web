@@ -1,8 +1,7 @@
-# SpaceWatch (web)
+# SpaceWatch
 
 A quiet, local-first tracker for upcoming rocket launches — live countdowns, favorites, and
-launch reminders. The web/PWA edition of the SpaceWatch Android app: same product, same look,
-adapted for the browser.
+launch reminders. Runs in any modern browser and installs as an app (PWA) on phones and desktops.
 
 **Live:** https://matthbish.github.io/spacewatch-web/
 
@@ -23,7 +22,7 @@ adapted for the browser.
 - **Offline** — installable PWA; the app shell works offline and cached launch data stays
   available, always labelled as offline/stale rather than passed off as current.
 
-## Browser notifications: what's different from Android
+## How reminders work in the browser
 
 Browsers can't wake a closed website on a schedule, so reminders fire while SpaceWatch is open in
 a tab or running as an installed app (the app checks every 30 s and when you return to it). A
@@ -48,7 +47,7 @@ src/
   components/        Reusable UI (LaunchCard, CountdownText, StatusLabel, …), each with a test
   screens/           Home, Detail, Favorites, EntityLaunches, Settings, Support
   sw-template.js     Service worker (app-shell cache only); the build injects the file list
-  styles.css         Design tokens (1:1 with the Android theme) and all styling
+  styles.css         Design tokens and all styling
 ```
 
 **Storage.** Everything lives in `localStorage` under `spacewatch.*` keys: launches, last-refresh
