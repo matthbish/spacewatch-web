@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  DEFAULT_SETTINGS, TTL_MS, getState, isCacheStale, isFavorite, refresh, reloadFromStorage, setFavorite,
-  setNewLaunchHandler, setState, updateSettings,
+  DEFAULT_SETTINGS, MANUAL_REFRESH_MIN_MS, TTL_MS, getState, isCacheStale, isFavorite, refresh, refreshNow,
+  reloadFromStorage, setFavorite, setNewLaunchHandler, setState, updateSettings,
 } from './store';
 import { HOUR, launch, launchDto } from './test-fixtures';
 
@@ -20,7 +20,7 @@ const ok = (body: unknown) => Promise.resolve(new Response(JSON.stringify(body),
 beforeEach(() => {
   localStorage.clear();
   reloadFromStorage();
-  setState({ refreshing: false, lastResult: null, online: true, toast: null }, false);
+  setState({ refreshing: false, manualRefreshing: false, lastResult: null, online: true, toast: null }, false);
   setNewLaunchHandler(() => {});
   setOnline(true);
 });
@@ -148,5 +148,29 @@ describe('isCacheStale', () => {
     expect(isCacheStale({ ...getState(), lastRefresh: null }, now)).toBe(false);
     expect(isCacheStale({ ...getState(), lastRefresh: now - TTL_MS + 1000 }, now)).toBe(false);
     expect(isCacheStale({ ...getState(), lastRefresh: now - TTL_MS - 1000 }, now)).toBe(true);
+  });
+});
+
+describe('refreshNow (refresh buttons)', () => {
+  it('ignores repeat taps, stays busy long enough to see, then reports the result', async () => {
+    const fetch = mockFetch(() => ok({ results: [launchDto()] }));
+    const started = Date.now();
+    const first = refreshNow();
+    expect(getState().manualRefreshing).toBe(true);
+    await Promise.all([refreshNow(), refreshNow(), first]);
+    expect(Date.now() - started).toBeGreaterThanOrEqual(MANUAL_REFRESH_MIN_MS - 20);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(getState().manualRefreshing).toBe(false);
+    expect(getState().toast?.text).toBe('Launch data updated');
+  });
+
+  it('tells the user when it could not refresh', async () => {
+    setOnline(false);
+    await refreshNow();
+    expect(getState().toast?.text).toBe("You're offline — showing previously saved data");
+    setOnline(true);
+    mockFetch(() => Promise.resolve(new Response('', { status: 500 })));
+    await refreshNow();
+    expect(getState().toast?.text).toBe('Refresh failed — showing previously saved data');
   });
 });

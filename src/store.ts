@@ -31,6 +31,8 @@ export interface State {
   settings: Settings;
   online: boolean;
   refreshing: boolean;
+  /** A user-requested refresh (button) is in progress, including its minimum feedback time. */
+  manualRefreshing: boolean;
   lastResult: RefreshResult | null;
   toast: { id: number; text: string } | null;
 }
@@ -70,6 +72,7 @@ let state: State = {
   ...loadPersisted(),
   online: typeof navigator === 'undefined' ? true : navigator.onLine,
   refreshing: false,
+  manualRefreshing: false,
   lastResult: null,
   toast: null,
 };
@@ -182,6 +185,25 @@ async function doRefresh(force: boolean): Promise<RefreshResult> {
     if (!navigator.onLine) return finish({ kind: 'offline' });
     return finish({ kind: 'failed', reason: 'UNKNOWN' });
   }
+}
+
+export const MANUAL_REFRESH_MIN_MS = 800;
+
+/**
+ * The refresh buttons' action. A fetch often finishes in well under a second, which made the
+ * spinner invisible and let every tap fire another request; this holds the busy state for at
+ * least [MANUAL_REFRESH_MIN_MS], ignores taps meanwhile, then says how it went.
+ */
+export async function refreshNow(): Promise<void> {
+  if (state.manualRefreshing) return;
+  setState({ manualRefreshing: true }, false);
+  const [result] = await Promise.all([refresh(true), new Promise((r) => setTimeout(r, MANUAL_REFRESH_MIN_MS))]);
+  setState({ manualRefreshing: false }, false);
+  showToast(
+    result.kind === 'success' ? 'Launch data updated'
+      : result.kind === 'offline' ? "You're offline — showing previously saved data"
+        : 'Refresh failed — showing previously saved data',
+  );
 }
 
 function finish(result: RefreshResult): RefreshResult {

@@ -9,7 +9,7 @@ import {
 } from '../domain';
 import { Icon } from '../icons';
 import { requestPermissionForFavorite } from '../notifications';
-import { isCacheStale, isFavorite, refresh, setFavorite, useNow, useStore } from '../store';
+import { isCacheStale, isFavorite, refresh, refreshNow, setFavorite, useNow, useStore } from '../store';
 
 export function HomeScreen() {
   const s = useStore((x) => x);
@@ -23,6 +23,7 @@ export function HomeScreen() {
   const noCache = s.launches.length === 0;
   const loading = noCache && (s.refreshing || s.lastResult === null);
   const hardError = noCache && !s.refreshing && (s.lastResult?.kind === 'failed' || s.lastResult?.kind === 'offline');
+  const busy = s.refreshing || s.manualRefreshing;
   const status = computeDataStatus(s.online, isCacheStale(s, now), s.lastResult?.kind === 'failed');
 
   return (
@@ -42,11 +43,12 @@ export function HomeScreen() {
         )}
         <button
           type="button"
-          class={`icon-button${s.refreshing ? ' is-spinning' : ''}`}
-          aria-label="Refresh launch data"
+          class={`icon-button${busy ? ' is-spinning' : ''}`}
+          aria-label={busy ? 'Refreshing launch data' : 'Refresh launch data'}
           title="Refresh launch data"
-          disabled={s.refreshing}
-          onClick={() => void refresh(true)}
+          aria-busy={busy}
+          disabled={busy}
+          onClick={() => void refreshNow()}
         >
           <Icon name="refresh" />
         </button>

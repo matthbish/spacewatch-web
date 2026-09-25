@@ -3,7 +3,7 @@ import { PageHeader } from '../components/PageHeader';
 import { APP_VERSION, CACHE_TTL_HOURS, REPO_URL } from '../config';
 import { formatLastUpdated } from '../domain';
 import { needsHomeScreenInstall, requestPermission, usePermission } from '../notifications';
-import { type Settings, type ThemeMode, refresh, showToast, updateSettings, useStore } from '../store';
+import { type Settings, type ThemeMode, refreshNow, updateSettings, useStore } from '../store';
 
 function Toggle({ id, title, subtitle, checked, onChange, nested = false }: {
   id: string;
@@ -77,17 +77,8 @@ const THEMES: [ThemeMode, string][] = [['SYSTEM', 'System'], ['LIGHT', 'Light'],
 export function SettingsScreen() {
   const settings = useStore((s) => s.settings);
   const lastRefresh = useStore((s) => s.lastRefresh);
-  const refreshing = useStore((s) => s.refreshing);
+  const refreshing = useStore((s) => s.refreshing || s.manualRefreshing);
   const set = (patch: Partial<Settings>) => updateSettings(patch);
-
-  const refreshNow = async () => {
-    const result = await refresh(true);
-    showToast(
-      result.kind === 'success' ? 'Launch data updated'
-        : result.kind === 'offline' ? "You're offline — showing previously saved data"
-          : 'Refresh failed — showing previously saved data',
-    );
-  };
 
   return (
     <>
@@ -143,7 +134,7 @@ export function SettingsScreen() {
               <span>Refresh launch data</span>
               <small>{lastRefresh ? `Last updated ${formatLastUpdated(lastRefresh)}` : 'Not yet updated'}</small>
             </div>
-            <button type="button" class="text-button" disabled={refreshing} onClick={() => void refreshNow()}>
+            <button type="button" class="text-button" disabled={refreshing} aria-busy={refreshing} onClick={() => void refreshNow()}>
               {refreshing ? 'Refreshing…' : 'Refresh'}
             </button>
           </div>

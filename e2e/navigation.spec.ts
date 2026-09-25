@@ -108,3 +108,27 @@ test('is fully usable from the keyboard', async ({ page }, info) => {
   // Focus moves to the new page heading for screen-reader users.
   await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
 });
+
+test('the refresh button shows it is working and ignores taps until done', async ({ page }) => {
+  await page.goto('./');
+  await expect(page.getByTestId('launch-card').first()).toBeVisible();
+  let calls = 0;
+  await page.unroute('https://ll.thespacedevs.com/**');
+  await page.route('https://ll.thespacedevs.com/**', async (route) => {
+    calls++;
+    await new Promise((r) => setTimeout(r, 600));
+    await route.fulfill({ contentType: 'application/json', body: JSON.stringify({ results: [] }) });
+  });
+
+  const button = page.getByRole('button', { name: 'Refresh launch data' });
+  await button.click();
+  const busy = page.getByRole('button', { name: 'Refreshing launch data' });
+  await expect(busy).toBeDisabled();
+  await expect(busy).toHaveAttribute('aria-busy', 'true');
+  await expect(busy).toHaveClass(/is-spinning/);
+  for (let i = 0; i < 5; i++) await busy.click({ force: true });
+
+  await expect(page.getByRole('status').getByText('Launch data updated')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Refresh launch data' })).toBeEnabled();
+  expect(calls).toBe(1);
+});
