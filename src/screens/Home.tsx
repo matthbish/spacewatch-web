@@ -14,7 +14,7 @@ import { isCacheStale, isFavorite, refresh, setFavorite, useNow, useStore } from
 export function HomeScreen() {
   const s = useStore((x) => x);
   const now = useNow();
-  // User-initiated and not persisted: resets to hidden each time Home opens, like on Android.
+  // User-initiated and not persisted: resets to hidden each time Home opens.
   const [showRecent, setShowRecent] = useState(false);
 
   const upcoming = upcomingOnly(s.launches, now);

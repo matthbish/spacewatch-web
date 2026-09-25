@@ -82,7 +82,7 @@ export async function showNotification(title: string, launch: Launch) {
     tag: `${launch.id}:${title}`,
     data: { url },
   };
-  // Android Chrome only allows notifications via a service worker registration.
+  // Mobile Chrome only allows notifications via a service worker registration.
   const registration = await navigator.serviceWorker?.getRegistration().catch(() => undefined);
   if (registration) return registration.showNotification(title, options);
   const n = new Notification(title, options);

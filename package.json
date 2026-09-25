@@ -2,7 +2,7 @@
   "name": "spacewatch-web",
   "version": "1.0.0",
   "private": true,
-  "description": "SpaceWatch — a quiet, local-first tracker for upcoming rocket launches. Web/PWA edition.",
+  "description": "SpaceWatch — a quiet, local-first tracker for upcoming rocket launches.",
   "license": "MIT",
   "type": "module",
   "scripts": {
