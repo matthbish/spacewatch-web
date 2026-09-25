@@ -1,7 +1,7 @@
 /*
- * SpaceWatch design tokens — a 1:1 port of the Android app's ui/theme/Color.kt. Quiet slate,
- * deliberately low-saturation; near-black (not "space navy") in dark mode. Nothing here should
- * read as alarm or noise, even when marking something as urgent.
+ * SpaceWatch design tokens. Quiet slate, deliberately low-saturation; near-black (not "space
+ * navy") in dark mode. Nothing here should read as alarm or noise, even when marking something as
+ * urgent.
  */
 :root,
 :root[data-theme='light'] {

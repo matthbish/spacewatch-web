@@ -17,7 +17,7 @@ import star from '@material-design-icons/svg/filled/star.svg?raw';
 import starBorder from '@material-design-icons/svg/filled/star_border.svg?raw';
 import wifiOff from '@material-design-icons/svg/filled/wifi_off.svg?raw';
 
-// The same Material icon set the Android app uses (Apache-2.0), inlined at build time.
+// Material Icons (Apache-2.0), inlined at build time.
 const ICONS = {
   arrowBack, business, cloudOff, coffee, errorOutline, explore, history, locationOn, notificationsOff,
   openInNew, public: publicIcon, refresh, rocketLaunch, schedule, settings, star, starBorder, wifiOff,
