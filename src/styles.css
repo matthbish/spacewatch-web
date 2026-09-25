@@ -177,8 +177,9 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
     background: var(--background);
     border-right: 1px solid var(--outline-variant);
   }
-  .app .nav { display: flex; }
-  .nav__brand { display: block; margin-bottom: 28px; border-radius: 12px; }
+  /* Must out-specify the mobile `.app.is-top-level .nav { display: block }` rule above. */
+  .app .nav, .app.is-top-level .nav { display: flex; }
+  .nav__brand { display: flex; margin-bottom: 28px; border-radius: 12px; }
   .nav__items { flex-direction: column; gap: 12px; height: auto; }
   .nav__item { height: 64px; width: var(--rail-width); }
   .nav__support { display: block; margin-top: auto; }
