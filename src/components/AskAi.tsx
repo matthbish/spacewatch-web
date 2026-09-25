@@ -8,17 +8,18 @@ const SITES: [name: string, url: string][] = [
 ];
 
 export function launchPrompt(l: Launch): string {
+  const time = new Date(l.net).toISOString().slice(0, 16).replace('T', ' ');
   const facts = [
     ['Mission', l.missionName],
     ['Rocket', l.rocketName],
     ['Provider', l.providerName],
+    ['Launch time', `${l.netIsPrecise ? '' : 'approximately '}${time} UTC`],
     ['Launch site', [l.padName, l.locationName].filter(Boolean).join(', ')],
-    ['Launch time (UTC)', `${l.netIsPrecise ? '' : 'approximately '}${new Date(l.net).toISOString()}`],
-    ['Status', l.status],
-    ['Mission type', l.missionType],
-    ['Description', l.missionDescription],
   ].filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`);
-  return `I'm looking at this rocket launch:\n${facts.join('\n')}\n\nGive me a short overview plus one random interesting fact about it, then I'll ask follow-up questions.`;
+  return `I'm looking at this rocket launch:\n${facts.join('\n')}\n\n`
+    +'First, a short bullet list of key facts a rocket/space enthusiast would want: rocket height and speed, payload mass and '
+    + 'target orbit, whether anything will be recovered or landed, time to orbit, total mission duration, and '
+    + "anything else notable. Then a short overview. I'll ask follow-up questions after.";
 }
 
 /**
@@ -29,7 +30,7 @@ export function AskAi({ launch }: { launch: Launch }) {
   const q = encodeURIComponent(launchPrompt(launch));
   return (
     <section class="detail__ask">
-      <h2>Ask an AI about this launch</h2>
+      <h2>Ask AI about this launch</h2>
       <div class="detail__ask-links">
         {SITES.map(([name, url]) => (
           <a key={name} class="text-button" href={url + q} target="_blank" rel="noopener noreferrer">

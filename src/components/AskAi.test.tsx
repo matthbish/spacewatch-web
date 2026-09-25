@@ -14,7 +14,11 @@ it('opens each chat in a new tab with the launch prefilled', () => {
   }
 });
 
+it('sends only the launch basics, not status or description', () => {
+  expect(launchPrompt(launch())).not.toMatch(/Status|Description|Mission type/);
+});
+
 it('leaves out fields the API did not provide', () => {
-  const p = launchPrompt(launch({ rocketName: null, missionDescription: null, padName: null, locationName: null }));
-  expect(p).not.toMatch(/Rocket:|Description:|Launch site:|null/);
+  const p = launchPrompt(launch({ rocketName: null, padName: null, locationName: null }));
+  expect(p).not.toMatch(/Rocket:|Launch site:|null/);
 });
