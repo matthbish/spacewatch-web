@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
+import { AskAi } from '../components/AskAi';
 import { CountdownText } from '../components/CountdownText';
 import { FavoriteButton } from '../components/FavoriteButton';
 import { LaunchImage } from '../components/LaunchImage';
@@ -126,6 +127,9 @@ export function DetailScreen({ id }: { id: string }) {
             <Icon name="openInNew" />View mission page
           </a>
         )}
+
+        <hr />
+        <AskAi launch={launch} />
       </article>
     </>
   );

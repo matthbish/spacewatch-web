@@ -589,6 +589,8 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
 .region-link:hover { background: color-mix(in srgb, var(--primary) 8%, transparent); }
 .detail__about h2 { font-size: 14px; font-weight: 500; margin-bottom: 8px; }
 .detail__about p { font-size: 15px; line-height: 22px; }
+.detail__ask h2 { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.detail__ask-links { display: flex; flex-wrap: wrap; column-gap: 20px; }
 
 /* ---- Favorites -------------------------------------------------------------------------------- */
 
