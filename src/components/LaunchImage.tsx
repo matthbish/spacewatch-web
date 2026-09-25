@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 
 /**
  * The launch photo at the top of a detail page. Dimmed and faded into the page background so it
@@ -12,7 +12,12 @@ export function LaunchImage({ src, alt, credit, license }: {
   license: string | null;
 }) {
   const [status, setStatus] = useState<'loading' | 'loaded' | 'failed'>('loading');
-  useEffect(() => setStatus('loading'), [src]);
+  // Reset during render, not in an effect: a mount effect can run after a fast onLoad and undo it.
+  const [shownSrc, setShownSrc] = useState(src);
+  if (src !== shownSrc) {
+    setShownSrc(src);
+    setStatus('loading');
+  }
   if (!src || status === 'failed') return null;
   return (
     <figure class={`launch-image${status === 'loaded' ? ' is-loaded' : ''}`} data-testid="launch-image">

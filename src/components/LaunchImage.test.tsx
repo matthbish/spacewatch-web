@@ -24,3 +24,10 @@ it('renders nothing without a photo, or when it fails to load', () => {
   fireEvent.error(screen.getByRole('img'));
   expect(screen.queryByTestId('launch-image')).toBeNull();
 });
+
+it('starts over when the photo changes', () => {
+  const { rerender } = render(<LaunchImage src="https://images.example/a.jpg" alt="x" credit={null} license={null} />);
+  fireEvent.load(screen.getByRole('img'));
+  rerender(<LaunchImage src="https://images.example/b.jpg" alt="x" credit={null} license={null} />);
+  expect(screen.getByTestId('launch-image').className).not.toContain('is-loaded');
+});
