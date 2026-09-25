@@ -68,6 +68,9 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
 }
+/* See syncBrowserToolbar() in main.tsx: while the browser's own bottom toolbar is showing, the
+   page doesn't reach the home indicator, so its inset would just be dead space under the nav. */
+:root.browser-toolbar { --safe-bottom: 0px; }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -185,7 +188,6 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
   .nav__support { display: block; margin-top: auto; }
   .app { padding-left: var(--rail-width); }
   .main, .app.is-top-level .main { padding-bottom: 40px; }
-  .page-footer { display: none; }
 }
 
 @media (min-width: 1180px) {
@@ -459,8 +461,8 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
 
 .favorites { display: flex; flex-direction: column; gap: 24px; padding: 12px 0; }
 .section-label { font-size: 14px; font-weight: 500; color: var(--on-surface-variant); margin-bottom: 12px; }
-.entity-list { display: grid; gap: 8px; }
-@media (min-width: 1180px) { .entity-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.entity-list { display: grid; gap: 8px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1180px) { .entity-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
 .entity-row {
   display: flex;
   align-items: center;
@@ -540,30 +542,34 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
 .about__row dt { color: var(--on-surface-variant); }
 .about__row--stacked { flex-direction: column; gap: 2px; }
 .about__privacy-title { font-size: 14px; font-weight: 500; margin: 12px 0 4px; }
-.settings__support { margin-top: 16px; }
 
 /* ---- Support ---------------------------------------------------------------------------------- */
 
 .support-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  min-height: 36px;
-  padding: 0 10px;
-  border-radius: 18px;
-  color: var(--on-surface-variant);
-  font-size: 12px;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px 0 12px;
+  border: 1px solid var(--outline-variant);
+  border-radius: 20px;
+  color: var(--on-surface);
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   text-decoration: none;
-  opacity: 0.8;
-  transition: opacity 150ms var(--ease), background-color 150ms var(--ease);
+  transition: background-color 150ms var(--ease), border-color 150ms var(--ease);
 }
-.support-link .icon { width: 16px; height: 16px; }
-.support-link:hover { opacity: 1; background: color-mix(in srgb, var(--on-surface) 6%, transparent); }
-.support-link--compact { flex-direction: column; gap: 2px; padding: 8px 10px; font-size: 11px; border-radius: 12px; }
+.support-link .icon { width: 18px; height: 18px; color: var(--tertiary); }
+.support-link:hover {
+  border-color: color-mix(in srgb, var(--tertiary) 45%, var(--outline-variant));
+  background: color-mix(in srgb, var(--tertiary) 8%, transparent);
+}
+.support-link--compact { flex-direction: column; gap: 4px; min-height: 0; padding: 10px 12px; font-size: 11px; border-radius: 14px; }
 .support-link--compact .icon { width: 20px; height: 20px; }
 .page-footer { display: flex; justify-content: center; margin-top: auto; padding-top: 32px; }
+/* Desktop has the rail's Support link instead; declared after the base rule so it wins. */
+@media (min-width: 840px) { .page-footer { display: none; } }
 
 .prose { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding: 16px 4px; max-width: 560px; font-size: 15px; line-height: 22px; }
 .prose__icon { width: 40px; height: 40px; color: var(--tertiary); }

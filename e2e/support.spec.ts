@@ -4,10 +4,10 @@ import { isMobile, mockApi } from './helpers';
 test.beforeEach(async ({ page }) => { await mockApi(page); });
 
 for (const route of ['#/', '#/favorites', '#/settings', '#/launch/f9-1', '#/entity/PROVIDER/121/SpaceX', '#/support']) {
-  test(`a Support SpaceWatch link is reachable on ${route}`, async ({ page }) => {
+  test(`exactly one Support SpaceWatch link is shown on ${route}`, async ({ page }) => {
     await page.goto(`./${route}`);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    await expect(page.getByTestId('support-link').filter({ visible: true }).first()).toBeVisible();
+    await expect(page.getByTestId('support-link').filter({ visible: true })).toHaveCount(1);
   });
 }
 

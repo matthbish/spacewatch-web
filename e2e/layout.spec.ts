@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { isMobile, mockApi } from './helpers';
+import { isMobile, mockApi, seedStorage } from './helpers';
 
 test.beforeEach(async ({ page }) => { await mockApi(page); });
 
@@ -24,6 +24,25 @@ test('mobile: bottom navigation, single column, nothing overflows', async ({ pag
   const fav = (await page.getByRole('button', { name: /^Favorite / }).first().boundingBox())!;
   expect(fav.width).toBeGreaterThanOrEqual(44);
   expect(fav.height).toBeGreaterThanOrEqual(44);
+});
+
+test('favorite rows never grow wider than launch cards, however long the name', async ({ page }) => {
+  const long = 'Rocket Lab Launch Complex 1, Mahia Peninsula, New Zealand, with an extra-long site name that cannot fit';
+  await seedStorage(page, {
+    'spacewatch.favorites': [
+      { type: 'LAUNCH', refId: 'f9-1', displayName: 'Starlink Group 10-1', savedAt: 1 },
+      { type: 'LOCATION', refId: long, displayName: long, savedAt: 2 },
+      { type: 'PROVIDER', refId: '121', displayName: 'SpaceX', savedAt: 3 },
+    ],
+  });
+  await page.goto('./#/favorites');
+  const card = (await page.getByTestId('launch-card').first().boundingBox())!;
+  const rows = page.getByTestId('entity-row');
+  await expect(rows).toHaveCount(2);
+  const [site, provider] = await Promise.all([0, 1].map((i) => rows.nth(i).boundingBox()));
+  expect(site!.width).toBeLessThanOrEqual(card.width + 0.5);
+  expect(site!.width).toBeCloseTo(provider!.width, 0);
+  expect(await noHorizontalScroll(page)).toBe(true);
 });
 
 test('mobile: detail pages drop the bottom bar for a focused view', async ({ page }, info) => {

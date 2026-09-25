@@ -1,6 +1,5 @@
 import type { ComponentChildren } from 'preact';
 import { PageHeader } from '../components/PageHeader';
-import { SupportLink } from '../components/SupportLink';
 import { APP_VERSION, CACHE_TTL_HOURS, REPO_URL } from '../config';
 import { formatLastUpdated } from '../domain';
 import { needsHomeScreenInstall, requestPermission, usePermission } from '../notifications';
@@ -169,7 +168,6 @@ export function SettingsScreen() {
             device. It does not collect personal information, does not use analytics or tracking, and does not require
             an account. The only network requests it makes are to fetch public launch schedule data.
           </p>
-          <div class="settings__support"><SupportLink /></div>
         </Section>
       </div>
     </>
