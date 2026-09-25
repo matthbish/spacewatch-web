@@ -99,11 +99,11 @@ export function App() {
             </li>
           ))}
         </ul>
-        <div class="nav__support"><SupportLink compact /></div>
+        <div class="nav__support"><SupportLink compact current={active === 'support'} /></div>
       </nav>
       <main id="main" ref={mainRef} class="main" key={location.hash}>
         {screenFor(route)}
-        <footer class="page-footer"><SupportLink /></footer>
+        {active !== 'support' && <footer class="page-footer"><SupportLink /></footer>}
       </main>
       <Toast />
     </div>

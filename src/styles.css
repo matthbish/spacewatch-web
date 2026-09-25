@@ -561,7 +561,8 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
   transition: background-color 150ms var(--ease), border-color 150ms var(--ease);
 }
 .support-link .icon { width: 18px; height: 18px; color: var(--tertiary); }
-.support-link:hover {
+.support-link:hover,
+.support-link[aria-current='page'] {
   border-color: color-mix(in srgb, var(--tertiary) 45%, var(--outline-variant));
   background: color-mix(in srgb, var(--tertiary) 8%, transparent);
 }

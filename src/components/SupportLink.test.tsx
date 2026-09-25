@@ -11,5 +11,10 @@ it('points to the in-app support page while no destination is configured', () =>
 
 it('has a compact form for the desktop rail', () => {
   render(<SupportLink compact />);
-  expect(screen.getByRole('link', { name: 'Support' })).toBeTruthy();
+  expect(screen.getByRole('link', { name: 'Support' }).getAttribute('aria-current')).toBeNull();
+});
+
+it('marks itself current while on the support page', () => {
+  render(<SupportLink compact current />);
+  expect(screen.getByRole('link', { name: 'Support' }).getAttribute('aria-current')).toBe('page');
 });
