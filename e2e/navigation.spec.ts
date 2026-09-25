@@ -132,3 +132,28 @@ test('the refresh button shows it is working and ignores taps until done', async
   await expect(page.getByRole('button', { name: 'Refresh launch data' })).toBeEnabled();
   expect(calls).toBe(1);
 });
+
+for (const reducedMotion of ['no-preference', 'reduce'] as const) {
+  test(`refreshing is visible without relying on the spinner (reduced motion: ${reducedMotion})`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion });
+    await page.goto('./');
+    await expect(page.getByTestId('launch-card').first()).toBeVisible();
+    await page.unroute('https://ll.thespacedevs.com/**');
+    await page.route('https://ll.thespacedevs.com/**', async (route) => {
+      await new Promise((r) => setTimeout(r, 1_200));
+      await route.fulfill({ contentType: 'application/json', body: JSON.stringify({ results: [] }) });
+    });
+    await page.getByRole('button', { name: 'Refresh launch data' }).click();
+    const bar = page.getByRole('progressbar', { name: 'Refreshing launch data' });
+    await expect(bar).toBeVisible();
+    await expect(page.getByTestId('last-updated')).toHaveText('Refreshing launch data…');
+    // The progress segment is actually painted (not animated off-screen) in both modes.
+    const painted = await bar.evaluate((el) => {
+      const seg = getComputedStyle(el, '::before');
+      return parseFloat(seg.width) > 0 && seg.opacity !== '0';
+    });
+    expect(painted).toBe(true);
+    await expect(bar).toHaveCount(0);
+    await expect(page.getByTestId('last-updated')).toHaveText(/^Last updated /);
+  });
+}

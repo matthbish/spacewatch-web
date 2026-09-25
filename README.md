@@ -21,6 +21,10 @@ launch reminders. Runs in any modern browser and installs as an app (PWA) on pho
   privacy, and data-source attribution.
 - **Offline** — installable PWA; the app shell works offline and cached launch data stays
   available, always labelled as offline/stale rather than passed off as current.
+- **Install** — a quiet "Install app" link at the bottom of each page (side rail on desktop). In
+  Chrome, Edge, and Samsung Internet it opens the browser's install dialog directly; in Firefox and
+  on iOS, where sites can't trigger installation, it leads to Settings → Install app with the steps
+  for that browser. It disappears once installed and can be switched off in Settings.
 
 ## How reminders work in the browser
 

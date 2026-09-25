@@ -5,6 +5,7 @@ import coffee from '@material-design-icons/svg/filled/local_cafe.svg?raw';
 import errorOutline from '@material-design-icons/svg/filled/error_outline.svg?raw';
 import explore from '@material-design-icons/svg/filled/explore.svg?raw';
 import history from '@material-design-icons/svg/filled/history.svg?raw';
+import installMobile from '@material-design-icons/svg/filled/install_mobile.svg?raw';
 import locationOn from '@material-design-icons/svg/filled/location_on.svg?raw';
 import notificationsOff from '@material-design-icons/svg/filled/notifications_off.svg?raw';
 import openInNew from '@material-design-icons/svg/filled/open_in_new.svg?raw';
@@ -19,7 +20,7 @@ import wifiOff from '@material-design-icons/svg/filled/wifi_off.svg?raw';
 
 // Material Icons (Apache-2.0), inlined at build time.
 const ICONS = {
-  arrowBack, business, cloudOff, coffee, errorOutline, explore, history, locationOn, notificationsOff,
+  arrowBack, business, cloudOff, coffee, errorOutline, explore, history, installMobile, locationOn, notificationsOff,
   openInNew, public: publicIcon, refresh, rocketLaunch, schedule, settings, star, starBorder, wifiOff,
 };
 

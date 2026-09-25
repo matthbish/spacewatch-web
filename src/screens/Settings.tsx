@@ -1,7 +1,9 @@
 import type { ComponentChildren } from 'preact';
+import { useEffect } from 'preact/hooks';
 import { PageHeader } from '../components/PageHeader';
 import { APP_VERSION, CACHE_TTL_HOURS, REPO_URL } from '../config';
 import { formatLastUpdated } from '../domain';
+import { INSTALL_STEPS, installPlatform, promptInstall } from '../install';
 import { needsHomeScreenInstall, requestPermission, usePermission } from '../notifications';
 import { type Settings, type ThemeMode, refreshNow, updateSettings, useStore } from '../store';
 
@@ -33,10 +35,10 @@ function Toggle({ id, title, subtitle, checked, onChange, nested = false }: {
 }
 
 function Section({ title, children }: { title: string; children: ComponentChildren }) {
-  const id = `settings-${title.toLowerCase()}`;
+  const id = `settings-${title.toLowerCase().replace(/\s+/g, '-')}`;
   return (
     <section class="settings-section" aria-labelledby={id}>
-      <h2 class="settings-section__title" id={id}>{title}</h2>
+      <h2 class="settings-section__title" id={id} tabIndex={-1}>{title}</h2>
       {children}
     </section>
   );
@@ -72,13 +74,53 @@ function PermissionNotice({ enabled }: { enabled: boolean }) {
   return null;
 }
 
+function InstallSection() {
+  const installed = useStore((s) => s.installed);
+  const canPrompt = useStore((s) => s.canPromptInstall);
+  const suggest = useStore((s) => s.settings.suggestInstall);
+  if (installed) {
+    return <p class="setting-copy" data-testid="install-status">SpaceWatch is installed on this device.</p>;
+  }
+  return (
+    <>
+      <p class="setting-copy">
+        Install SpaceWatch for one-tap access from your home screen or desktop, its own window, and launch data
+        that stays available offline.
+      </p>
+      {canPrompt ? (
+        <button type="button" class="button button--tonal install-action" onClick={() => void promptInstall()}>Install SpaceWatch</button>
+      ) : (
+        <p class="notice" data-testid="install-steps">
+          {INSTALL_STEPS[installPlatform(navigator.userAgent, navigator.platform, navigator.maxTouchPoints)]}
+        </p>
+      )}
+      <Toggle
+        id="suggest-install"
+        title="Suggest installing"
+        subtitle="Show a small Install app link at the bottom of pages"
+        checked={suggest}
+        onChange={(v) => updateSettings({ suggestInstall: v })}
+      />
+    </>
+  );
+}
+
 const THEMES: [ThemeMode, string][] = [['SYSTEM', 'System'], ['LIGHT', 'Light'], ['DARK', 'Dark']];
 
-export function SettingsScreen() {
+export function SettingsScreen({ section }: { section?: 'install' }) {
   const settings = useStore((s) => s.settings);
   const lastRefresh = useStore((s) => s.lastRefresh);
   const refreshing = useStore((s) => s.refreshing || s.manualRefreshing);
   const set = (patch: Partial<Settings>) => updateSettings(patch);
+
+  // Arriving from an "Install app" link: bring that section into view and focus it. Runs after
+  // the app shell's own scroll/focus handling for the route, so it wins.
+  useEffect(() => {
+    if (section !== 'install') return;
+    const heading = document.getElementById('settings-install-app');
+    heading?.scrollIntoView({ block: 'start' });
+    heading?.focus({ preventScroll: true });
+  }, [section]);
 
   return (
     <>
@@ -126,6 +168,10 @@ export function SettingsScreen() {
               </label>
             ))}
           </fieldset>
+        </Section>
+
+        <Section title="Install app">
+          <InstallSection />
         </Section>
 
         <Section title="Data">

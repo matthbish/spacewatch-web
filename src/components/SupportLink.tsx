@@ -5,7 +5,7 @@ import { paths } from '../router';
 export function SupportLink({ compact = false, current = false }: { compact?: boolean; current?: boolean }) {
   return (
     <a
-      class={`support-link${compact ? ' support-link--compact' : ''}`}
+      class={`pill-link pill-link--support${compact ? ' pill-link--compact' : ''}`}
       href={paths.support}
       aria-current={current ? 'page' : undefined}
       data-testid="support-link"

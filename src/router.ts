@@ -10,7 +10,7 @@ import { FAVORITE_TYPES } from './domain';
 export type Route =
   | { name: 'home' }
   | { name: 'favorites' }
-  | { name: 'settings' }
+  | { name: 'settings'; section?: 'install' }
   | { name: 'support' }
   | { name: 'launch'; id: string }
   | { name: 'entity'; type: FavoriteType; id: string; label: string }
@@ -23,6 +23,7 @@ export function parseRoute(hash: string): Route {
   const [head, a, b, c] = parts;
   if (!head) return { name: 'home' };
   if (parts.length === 1 && (head === 'favorites' || head === 'settings' || head === 'support')) return { name: head };
+  if (head === 'settings' && a === 'install' && parts.length === 2) return { name: 'settings', section: 'install' };
   if (head === 'launch' && a && parts.length === 2) return { name: 'launch', id: a };
   if (head === 'entity' && FAVORITE_TYPES.includes(a as FavoriteType) && a !== 'LAUNCH' && b && parts.length <= 4) {
     return { name: 'entity', type: a as FavoriteType, id: b, label: c ?? b };
@@ -34,6 +35,7 @@ export const paths = {
   home: '#/',
   favorites: '#/favorites',
   settings: '#/settings',
+  install: '#/settings/install',
   support: '#/support',
   launch: (id: string) => `#/launch/${encodeURIComponent(id)}`,
   entity: (type: FavoriteType, id: string, label: string) =>

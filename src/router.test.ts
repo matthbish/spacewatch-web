@@ -8,6 +8,7 @@ describe('parseRoute', () => {
     expect(parseRoute('#/favorites')).toEqual({ name: 'favorites' });
     expect(parseRoute('#/settings')).toEqual({ name: 'settings' });
     expect(parseRoute('#/support')).toEqual({ name: 'support' });
+    expect(parseRoute(paths.install)).toEqual({ name: 'settings', section: 'install' });
   });
 
   it('round-trips launch and entity paths, including awkward characters', () => {

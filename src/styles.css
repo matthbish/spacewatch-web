@@ -185,7 +185,7 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
   .nav__brand { display: flex; margin-bottom: 28px; border-radius: 12px; }
   .nav__items { flex-direction: column; gap: 12px; height: auto; }
   .nav__item { height: 64px; width: var(--rail-width); }
-  .nav__support { display: block; margin-top: auto; }
+  .nav__support { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: auto; }
   .app { padding-left: var(--rail-width); }
   .main, .app.is-top-level .main { padding-bottom: 40px; }
 }
@@ -208,6 +208,34 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
   padding: var(--safe-top) calc(var(--gutter) - 8px) 0;
   background: var(--background);
 }
+/*
+ * Indeterminate progress: a short segment gliding along a faint 2px track. With reduced motion the
+ * segment stays put and fills the track instead, so the signal never depends on movement.
+ */
+.page-header__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+}
+.page-header__progress::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  background: var(--primary);
+  animation: progress-glide 1.2s var(--ease) infinite;
+}
+@keyframes progress-glide {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+
 .page-header__title {
   flex: 1;
   min-width: 0;
@@ -219,7 +247,35 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.page-header--center .page-header__title { text-align: center; }
+.page-header--center /*
+ * Indeterminate progress: a short segment gliding along a faint 2px track. With reduced motion the
+ * segment stays put and fills the track instead, so the signal never depends on movement.
+ */
+.page-header__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+}
+.page-header__progress::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  background: var(--primary);
+  animation: progress-glide 1.2s var(--ease) infinite;
+}
+@keyframes progress-glide {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+
+.page-header__title { text-align: center; }
 .page-header__actions { display: flex; align-items: center; }
 .page-header--center::before { content: ''; flex: none; width: 0; }
 .page-header--center:has(.page-header__actions > :nth-child(1))::before { width: 48px; }
@@ -227,7 +283,35 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
 
 @media (min-width: 840px) {
   .page-header { min-height: 88px; }
-  .page-header--center .page-header__title { text-align: left; font-size: 28px; line-height: 36px; }
+  .page-header--center /*
+ * Indeterminate progress: a short segment gliding along a faint 2px track. With reduced motion the
+ * segment stays put and fills the track instead, so the signal never depends on movement.
+ */
+.page-header__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+}
+.page-header__progress::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  background: var(--primary);
+  animation: progress-glide 1.2s var(--ease) infinite;
+}
+@keyframes progress-glide {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+
+.page-header__title { text-align: left; font-size: 28px; line-height: 36px; }
   .page-header--center::before { display: none; }
 }
 
@@ -493,7 +577,7 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
 .settings { display: flex; flex-direction: column; padding: 8px 4px 16px; max-width: 640px; }
 .settings-section { padding: 12px 0; }
 .settings-section + .settings-section { border-top: 1px solid var(--outline-variant); padding-top: 20px; }
-.settings-section__title { font-size: 14px; font-weight: 500; letter-spacing: 0.01em; color: var(--primary); margin-bottom: 8px; }
+.settings-section__title { scroll-margin-top: 80px; font-size: 14px; font-weight: 500; letter-spacing: 0.01em; color: var(--primary); margin-bottom: 8px; }
 .setting-row { display: flex; align-items: center; gap: 16px; min-height: 56px; padding: 6px 0; }
 .setting-row--nested { padding-left: 16px; min-height: 48px; }
 .setting-row__text { flex: 1; display: flex; flex-direction: column; cursor: pointer; }
@@ -547,7 +631,7 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
 
 /* ---- Support ---------------------------------------------------------------------------------- */
 
-.support-link {
+.pill-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -560,17 +644,25 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
   font-weight: 500;
   letter-spacing: 0.02em;
   text-decoration: none;
+  white-space: nowrap;
   transition: background-color 150ms var(--ease), border-color 150ms var(--ease);
 }
-.support-link .icon { width: 18px; height: 18px; color: var(--tertiary); }
-.support-link:hover,
-.support-link[aria-current='page'] {
+.pill-link .icon { width: 18px; height: 18px; }
+.pill-link--support .icon { color: var(--tertiary); }
+.pill-link--support:hover,
+.pill-link--support[aria-current='page'] {
   border-color: color-mix(in srgb, var(--tertiary) 45%, var(--outline-variant));
   background: color-mix(in srgb, var(--tertiary) 8%, transparent);
 }
-.support-link--compact { flex-direction: column; gap: 4px; min-height: 0; padding: 10px 12px; font-size: 11px; border-radius: 14px; }
-.support-link--compact .icon { width: 20px; height: 20px; }
-.page-footer { display: flex; justify-content: center; margin-top: auto; padding-top: 32px; }
+.pill-link--install .icon { color: var(--primary); }
+.pill-link--install:hover {
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--outline-variant));
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+.pill-link--compact { flex-direction: column; gap: 4px; min-height: 0; padding: 10px 12px; font-size: 11px; border-radius: 14px; }
+.pill-link--compact .icon { width: 20px; height: 20px; }
+.page-footer { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: auto; padding-top: 32px; }
+.page-footer:empty { display: none; }
 /* Desktop has the rail's Support link instead; declared after the base rule so it wins. */
 @media (min-width: 840px) { .page-footer { display: none; } }
 
@@ -602,6 +694,8 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
 .support-option__label { font-size: 15px; font-weight: 500; }
 .support-option__hint { font-size: 12px; line-height: 16px; letter-spacing: 0.03em; color: var(--on-surface-variant); }
 .support-option .icon { position: absolute; top: 14px; right: 14px; width: 18px; height: 18px; color: var(--tertiary); }
+.setting-copy { font-size: 14px; line-height: 20px; color: var(--on-surface-variant); margin: 4px 0 12px; }
+.install-action { margin: 4px 0 8px; }
 .prose__aside { font-size: 14px; line-height: 20px; color: var(--on-surface-variant); }
 
 .sr-only {
@@ -651,4 +745,5 @@ hr { border: 0; border-top: 1px solid var(--outline-variant); margin: 0; }
     animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
   }
+  .page-header__progress::before { animation: none !important; width: 100%; opacity: 0.7; }
 }

@@ -28,7 +28,7 @@ export function HomeScreen() {
 
   return (
     <>
-      <PageHeader title="SpaceWatch" center>
+      <PageHeader title="SpaceWatch" center busy={busy}>
         {recent.length > 0 && (
           <button
             type="button"
@@ -64,7 +64,7 @@ export function HomeScreen() {
             <div class="list-header">
               <DataStatusBanner status={status} lastUpdated={s.lastRefresh} />
               <p class="last-updated" data-testid="last-updated">
-                {s.lastRefresh ? `Last updated ${formatLastUpdated(s.lastRefresh)}` : 'Not yet updated'}
+                {busy ? 'Refreshing launch data…' : s.lastRefresh ? `Last updated ${formatLastUpdated(s.lastRefresh)}` : 'Not yet updated'}
               </p>
             </div>
             {shown.length === 0 ? (

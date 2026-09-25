@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from 'preact/hooks';
 import { BrandMark } from './components/BrandMark';
+import { InstallLink } from './components/InstallLink';
 import { SupportLink } from './components/SupportLink';
 import { Toast } from './components/Toast';
 import { Icon, type IconName } from './icons';
@@ -26,7 +27,7 @@ function screenFor(route: Route) {
   switch (route.name) {
     case 'home': return <HomeScreen />;
     case 'favorites': return <FavoritesScreen />;
-    case 'settings': return <SettingsScreen />;
+    case 'settings': return <SettingsScreen section={route.section} />;
     case 'support': return <SupportScreen />;
     case 'launch': return <DetailScreen id={route.id} />;
     case 'entity': return <EntityLaunchesScreen type={route.type} id={route.id} label={route.label} />;
@@ -99,11 +100,14 @@ export function App() {
             </li>
           ))}
         </ul>
-        <div class="nav__support"><SupportLink compact current={active === 'support'} /></div>
+        <div class="nav__support"><InstallLink compact /><SupportLink compact current={active === 'support'} /></div>
       </nav>
       <main id="main" ref={mainRef} class="main" key={location.hash}>
         {screenFor(route)}
-        {active !== 'support' && <footer class="page-footer"><SupportLink /></footer>}
+        <footer class="page-footer">
+          {active !== 'settings' && <InstallLink />}
+          {active !== 'support' && <SupportLink />}
+        </footer>
       </main>
       <Toast />
     </div>

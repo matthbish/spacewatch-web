@@ -1,5 +1,6 @@
 import { render } from 'preact';
 import { App } from './app';
+import { startInstallListeners } from './install';
 import { notifyNewLaunches, startReminderLoop } from './notifications';
 import { refresh, setNewLaunchHandler, startStoreListeners } from './store';
 import './styles.css';
@@ -7,6 +8,7 @@ import './styles.css';
 setNewLaunchHandler(notifyNewLaunches);
 startStoreListeners();
 startReminderLoop();
+startInstallListeners();
 void refresh();
 
 render(<App />, document.getElementById('app')!);

@@ -14,6 +14,8 @@ export interface Settings {
   notify1h: boolean;
   /** Notify when a new launch appears for a favorited rocket/provider/site/region. */
   notifyNewFavoriteMatches: boolean;
+  /** Show the quiet "Install app" link at the bottom of pages until the app is installed. */
+  suggestInstall: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -22,6 +24,7 @@ export const DEFAULT_SETTINGS: Settings = {
   notify24h: true,
   notify1h: true,
   notifyNewFavoriteMatches: true,
+  suggestInstall: true,
 };
 
 export interface State {
@@ -33,6 +36,10 @@ export interface State {
   refreshing: boolean;
   /** A user-requested refresh (button) is in progress, including its minimum feedback time. */
   manualRefreshing: boolean;
+  /** Running as an installed app (standalone window / home-screen app). */
+  installed: boolean;
+  /** The browser handed us its native install prompt (Chromium only). */
+  canPromptInstall: boolean;
   lastResult: RefreshResult | null;
   toast: { id: number; text: string } | null;
 }
@@ -73,6 +80,8 @@ let state: State = {
   online: typeof navigator === 'undefined' ? true : navigator.onLine,
   refreshing: false,
   manualRefreshing: false,
+  installed: false,
+  canPromptInstall: false,
   lastResult: null,
   toast: null,
 };

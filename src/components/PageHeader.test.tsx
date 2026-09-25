@@ -14,3 +14,10 @@ it('goes home from a deep link with nowhere to go back to', () => {
   fireEvent.click(screen.getByRole('button', { name: 'Back' }));
   expect(location.hash).toBe('#/');
 });
+
+it('shows a progress line while busy', () => {
+  const { rerender } = render(<PageHeader title="SpaceWatch" />);
+  expect(screen.queryByRole('progressbar')).toBeNull();
+  rerender(<PageHeader title="SpaceWatch" busy />);
+  expect(screen.getByRole('progressbar', { name: 'Refreshing launch data' })).toBeTruthy();
+});
