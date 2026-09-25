@@ -18,7 +18,7 @@ export function launchPrompt(l: Launch): string {
     ['Mission type', l.missionType],
     ['Description', l.missionDescription],
   ].filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`);
-  return `I'm looking at this rocket launch:\n${facts.join('\n')}\n\nGive me a short overview, then I'll ask follow-up questions.`;
+  return `I'm looking at this rocket launch:\n${facts.join('\n')}\n\nGive me a short overview plus one random interesting fact about it, then I'll ask follow-up questions.`;
 }
 
 /**
