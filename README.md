@@ -10,8 +10,8 @@ launch reminders. Runs in any modern browser and installs as an app (PWA) on pho
 - **Launches** — upcoming launches in chronological order with a live countdown (`T− 3d 4h 21m`,
   seconds under an hour out), quiet status label, and a thin-border "launching within 24 hours"
   treatment. A history toggle weaves the last 72 hours of launches into the timeline.
-- **Launch details** — rocket, provider, launch site, region, date/time, mission description,
-  and a mission/webcast link when one is reachable. Missing fields are hidden, not shown as "N/A".
+- **Launch details** — a muted launch photo when the API has one, then rocket, provider, launch
+  site, region, date/time, mission description, and a mission/webcast link when one is reachable. Missing fields are hidden, not shown as "N/A".
 - **Favorites** — launches, rockets, providers, launch sites, and states/countries. An entity
   favorite is a live filter: it matches launches added later, not just today's.
 - **Reminders** — 24 h and 1 h before favorited launches, plus "new launch added" for favorited
@@ -140,7 +140,7 @@ protected and only the maintainer merges.
 
 SpaceWatch stores everything on your device, in your browser. It collects no personal
 information, has no analytics or tracking, and needs no account. The only network requests are
-for public launch-schedule data.
+for public launch-schedule data and launch photos from The Space Devs (sent without a referrer).
 
 ## License
 

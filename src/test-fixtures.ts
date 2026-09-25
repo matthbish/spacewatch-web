@@ -19,11 +19,14 @@ export function launch(overrides: Partial<Launch> = {}): Launch {
     missionDescription: 'A batch of Starlink satellites.',
     missionType: 'Communications',
     webcastUrl: null,
+    imageUrl: 'https://images.example/falcon9.jpg',
+    imageCredit: 'SpaceX',
+    imageLicense: null,
     ...overrides,
   };
 }
 
-/** A raw Launch Library 2 result, shaped like the real API. */
+/** A raw Launch Library 2.3.0 result, shaped like the real API. */
 export function launchDto(overrides: Record<string, unknown> = {}) {
   return {
     id: 'l1',
@@ -33,9 +36,15 @@ export function launchDto(overrides: Record<string, unknown> = {}) {
     net_precision: { abbrev: 'SEC' },
     rocket: { id: 8000, configuration: { id: 164, name: 'Falcon 9', full_name: 'Falcon 9 Block 5' } },
     launch_service_provider: { id: 121, name: 'SpaceX' },
-    pad: { id: 80, name: 'Space Launch Complex 40', location: { id: 12, name: 'Cape Canaveral SFS, FL, USA', country_code: 'USA' } },
+    pad: { id: 80, name: 'Space Launch Complex 40', location: { id: 12, name: 'Cape Canaveral SFS, FL, USA', country: { alpha_3_code: 'USA', name: 'United States of America' } } },
     mission: { id: 1, name: 'Starlink Group 10-1', description: 'A batch of Starlink satellites.', type: 'Communications' },
-    vidURLs: [{ priority: 1, url: 'https://example.com/low' }, { priority: 10, url: 'https://example.com/high' }],
+    vid_urls: [{ priority: 1, url: 'https://example.com/low' }, { priority: 10, url: 'https://example.com/high' }],
+    image: {
+      image_url: 'https://images.example/f9-full.jpg',
+      thumbnail_url: 'https://images.example/f9-thumb.jpg',
+      credit: 'SpaceX',
+      license: { name: 'Unknown', link: null },
+    },
     ...overrides,
   };
 }

@@ -55,6 +55,16 @@ describe('persistence', () => {
     expect(getState().settings.notify1h).toBe(false);
   });
 
+  it('treats a cache saved before launch photos as due for a refresh, but still shows it', () => {
+    const old: Record<string, unknown> = { ...launch() };
+    delete old.imageUrl;
+    localStorage.setItem('spacewatch.launches', JSON.stringify([old]));
+    localStorage.setItem('spacewatch.lastRefresh', JSON.stringify(Date.now()));
+    reloadFromStorage();
+    expect(getState().launches).toHaveLength(1);
+    expect(getState().lastRefresh).toBeNull();
+  });
+
   it('survives corrupted storage without losing the other slices', () => {
     localStorage.setItem('spacewatch.launches', '{not json');
     localStorage.setItem('spacewatch.favorites', JSON.stringify([{ type: 'LAUNCH', refId: 'a', displayName: 'A', savedAt: 1 }]));

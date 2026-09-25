@@ -44,6 +44,11 @@ export interface Launch {
   missionDescription: string | null;
   missionType: string | null;
   webcastUrl: string | null;
+  imageUrl: string | null;
+  /** Who took/owns the photo, when the API knows. */
+  imageCredit: string | null;
+  /** The photo's license name, when known (the API often says "Unknown"). */
+  imageLicense: string | null;
 }
 
 /**
@@ -185,7 +190,12 @@ export function mapLaunchDto(raw: unknown): Launch | null {
   const location = obj(pad?.location);
   const precision = str(obj(dto.net_precision)?.abbrev);
   const parsedNet = Date.parse(str(dto.net) ?? '');
-  const videos = Array.isArray(dto.vidURLs) ? dto.vidURLs.map(obj).filter((v): v is Obj => !!v && !!str(v.url)) : [];
+  // 2.3.0 renamed vidURLs to vid_urls and moved country_code under country; both spellings are
+  // read so a cache or response in either shape maps the same way.
+  const rawVideos = dto.vid_urls ?? dto.vidURLs;
+  const videos = Array.isArray(rawVideos) ? rawVideos.map(obj).filter((v): v is Obj => !!v && !!str(v.url)) : [];
+  const image = obj(dto.image);
+  const license = str(obj(image?.license)?.name);
   const bestVideo = videos.reduce<Obj | null>(
     (best, v) => (!best || Number(v.priority ?? 0) > Number(best.priority ?? 0) ? v : best),
     null,
@@ -204,10 +214,13 @@ export function mapLaunchDto(raw: unknown): Launch | null {
     providerName: str(provider?.name),
     padName: str(pad?.name),
     locationName: str(location?.name),
-    countryCode: str(location?.country_code),
+    countryCode: str(obj(location?.country)?.alpha_3_code) ?? str(location?.country_code),
     missionDescription: str(mission?.description),
     missionType: str(mission?.type),
     webcastUrl: bestVideo ? str(bestVideo.url) : null,
+    imageUrl: str(image?.image_url) ?? str(dto.image),
+    imageCredit: str(image?.credit),
+    imageLicense: license && license.toLowerCase() !== 'unknown' ? license : null,
   };
 }
 

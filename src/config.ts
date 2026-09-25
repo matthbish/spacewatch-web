@@ -11,7 +11,7 @@ export const CACHE_TTL_HOURS = 24;
  */
 export const LAUNCH_HISTORY_RETENTION_HOURS = 24 * 7;
 
-export const API_URL = 'https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=30&mode=detailed';
+export const API_URL = 'https://ll.thespacedevs.com/2.3.0/launches/upcoming/?limit=30&mode=detailed';
 
 /**
  * The Support page's donation options, in display order. Provider-agnostic: each is just a label,

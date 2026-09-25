@@ -157,3 +157,33 @@ for (const reducedMotion of ['no-preference', 'reduce'] as const) {
     await expect(page.getByTestId('last-updated')).toHaveText(/^Last updated /);
   });
 }
+
+test.describe('launch photo', () => {
+  test('shows a muted photo with its credit at the top of the detail page', async ({ page }) => {
+    const png = await (await page.request.get('./icons/icon-512.png')).body();
+    await page.route('https://images.example/**', (route) => route.fulfill({ contentType: 'image/png', body: png }));
+    await page.goto('./#/launch/f9-1');
+    const photo = page.getByTestId('launch-image');
+    await expect(photo).toHaveClass(/is-loaded/);
+    await expect(photo.getByRole('img')).toHaveAttribute('alt', 'Falcon 9 Block 5 — Starlink Group 10-1');
+    await expect(photo.getByText('Image: Test Agency')).toBeVisible();
+    // Sits above the countdown, never in place of it.
+    const [img, countdown] = await Promise.all([photo.boundingBox(), page.getByTestId('countdown').boundingBox()]);
+    expect(img!.y + img!.height).toBeLessThanOrEqual(countdown!.y + 1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  });
+
+  test('a broken photo quietly disappears', async ({ page }) => {
+    await page.route('https://images.example/**', (route) => route.fulfill({ status: 404, body: '' }));
+    await page.goto('./#/launch/f9-1');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('Starlink Group 10-1');
+    await expect(page.getByTestId('launch-image')).toHaveCount(0);
+    await expect(page.getByTestId('countdown')).toBeVisible();
+  });
+
+  test('launch lists stay text-only', async ({ page }) => {
+    await page.goto('./');
+    await expect(page.getByTestId('launch-card').first()).toBeVisible();
+    await expect(page.getByTestId('launch-card').locator('img')).toHaveCount(0);
+  });
+});

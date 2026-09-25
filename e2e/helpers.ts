@@ -15,6 +15,7 @@ interface DtoOptions {
   netOffsetMs: number;
   status?: string;
   description?: string;
+  image?: string | null;
 }
 
 export function dto(o: DtoOptions, now = Date.now()) {
@@ -25,7 +26,8 @@ export function dto(o: DtoOptions, now = Date.now()) {
     net: new Date(now + o.netOffsetMs).toISOString(),
     rocket: { configuration: { id: o.rocketId, name: o.rocket, full_name: o.rocket } },
     launch_service_provider: { id: o.providerId, name: o.provider },
-    pad: { name: 'Pad 1', location: { name: o.location, country_code: o.country } },
+    pad: { name: 'Pad 1', location: { name: o.location, country: { alpha_3_code: o.country } } },
+    image: o.image === null ? null : { image_url: o.image ?? `https://images.example/${o.id}.jpg`, credit: 'Test Agency', license: { name: 'Unknown' } },
     mission: { name: o.mission, description: o.description ?? `${o.mission} mission description.`, type: 'Test' },
   };
 }

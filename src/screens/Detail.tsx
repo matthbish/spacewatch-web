@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { CountdownText } from '../components/CountdownText';
 import { FavoriteButton } from '../components/FavoriteButton';
+import { LaunchImage } from '../components/LaunchImage';
 import { LaunchListSkeleton } from '../components/LaunchListSkeleton';
 import { MessageState } from '../components/MessageState';
 import { PageHeader } from '../components/PageHeader';
@@ -80,6 +81,12 @@ export function DetailScreen({ id }: { id: string }) {
       </PageHeader>
 
       <article class="detail">
+        <LaunchImage
+          src={launch.imageUrl ?? null}
+          alt={`${launch.rocketName ?? 'Launch'} — ${launch.missionName}`}
+          credit={launch.imageCredit ?? null}
+          license={launch.imageLicense ?? null}
+        />
         <div class="detail__countdown">
           <CountdownText net={launch.net} passed={passed} class="countdown--large" />
           <StatusLabel status={launch.status} />

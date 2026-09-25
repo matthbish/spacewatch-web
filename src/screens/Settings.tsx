@@ -203,7 +203,8 @@ export function SettingsScreen({ section }: { section?: 'install' }) {
           <p class="hint">
             SpaceWatch stores everything — favorites, settings, and cached launches — locally in your browser on this
             device. It does not collect personal information, does not use analytics or tracking, and does not require
-            an account. The only network requests it makes are to fetch public launch schedule data.
+            an account. The only network requests it makes are to fetch public launch schedule data and launch photos
+            from The Space Devs.
           </p>
         </Section>
       </div>

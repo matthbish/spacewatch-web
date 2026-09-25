@@ -7,6 +7,7 @@ function cachedLaunch(id: string, netOffsetMs: number) {
     id, missionName: `Mission ${id}`, status: 'GO', net: Date.now() + netOffsetMs, netIsPrecise: true,
     rocketId: '164', rocketName: 'Falcon 9 Block 5', providerId: '121', providerName: 'SpaceX', padName: 'Pad',
     locationName: 'Cape Canaveral SFS, FL, USA', countryCode: 'USA', missionDescription: null, missionType: null, webcastUrl: null,
+    imageUrl: null, imageCredit: null, imageLicense: null,
   };
 }
 

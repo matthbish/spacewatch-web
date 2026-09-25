@@ -67,9 +67,13 @@ function read<T>(key: string, valid: (v: unknown) => boolean, fallback: T): T {
 
 function loadPersisted(): Pick<State, PersistedKey> {
   const settings = read<Partial<Settings>>(PERSISTED.settings, (v) => !!v && typeof v === 'object', {});
+  const launches = read<Launch[]>(PERSISTED.launches, Array.isArray, []);
+  // A cache saved before launch photos existed is still shown, but counts as never refreshed so
+  // the next load fetches photos instead of waiting out the TTL.
+  const predatesImages = launches.some((l) => !('imageUrl' in l));
   return {
-    launches: read(PERSISTED.launches, Array.isArray, []),
-    lastRefresh: read(PERSISTED.lastRefresh, (v) => typeof v === 'number', null),
+    launches,
+    lastRefresh: predatesImages ? null : read(PERSISTED.lastRefresh, (v) => typeof v === 'number', null),
     favorites: read(PERSISTED.favorites, Array.isArray, []),
     settings: { ...DEFAULT_SETTINGS, ...settings },
   };

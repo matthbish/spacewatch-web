@@ -135,12 +135,27 @@ describe('API mapping', () => {
       id: 'l1', missionName: 'Starlink Group 10-1', status: 'GO', rocketId: '164', rocketName: 'Falcon 9 Block 5',
       providerId: '121', providerName: 'SpaceX', padName: 'Space Launch Complex 40',
       locationName: 'Cape Canaveral SFS, FL, USA', countryCode: 'USA', webcastUrl: 'https://example.com/high',
-      netIsPrecise: false,
+      netIsPrecise: false, imageUrl: 'https://images.example/f9-full.jpg', imageCredit: 'SpaceX',
+      // "Unknown" is what the API says when it doesn't know; not worth showing.
+      imageLicense: null,
     });
+  });
+  it('keeps a known image license', () => {
+    const l = mapLaunchDto(launchDto({ image: { image_url: 'https://x/y.jpg', credit: null, license: { name: 'CC BY 2.0' } } }))!;
+    expect(l).toMatchObject({ imageUrl: 'https://x/y.jpg', imageCredit: null, imageLicense: 'CC BY 2.0' });
+  });
+  it('still maps the older 2.2.0 shape (country_code, vidURLs, plain image URL)', () => {
+    const l = mapLaunchDto(launchDto({
+      pad: { name: 'LC-39A', location: { name: 'Kennedy Space Center, FL, USA', country_code: 'USA' } },
+      vid_urls: undefined,
+      vidURLs: [{ priority: 1, url: 'https://example.com/v' }],
+      image: 'https://images.example/plain.jpg',
+    }))!;
+    expect(l).toMatchObject({ countryCode: 'USA', webcastUrl: 'https://example.com/v', imageUrl: 'https://images.example/plain.jpg', imageCredit: null });
   });
   it('degrades missing or wrongly-typed fields to null instead of failing', () => {
     const l = mapLaunchDto({ id: 7, name: 'Bare', rocket: 'nope', pad: { location: null }, vidURLs: 'x', net: 'garbage' })!;
-    expect(l).toMatchObject({ id: '7', missionName: 'Bare', status: 'UNKNOWN', rocketName: null, locationName: null, webcastUrl: null, net: 0, netIsPrecise: true });
+    expect(l).toMatchObject({ id: '7', missionName: 'Bare', status: 'UNKNOWN', rocketName: null, locationName: null, webcastUrl: null, net: 0, netIsPrecise: true, imageUrl: null });
   });
   it('falls back to rocket short name, then launch name, then a placeholder', () => {
     expect(mapLaunchDto(launchDto({ rocket: { configuration: { id: 1, name: 'Electron' } } }))!.rocketName).toBe('Electron');
