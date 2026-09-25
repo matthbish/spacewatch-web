@@ -14,10 +14,10 @@ export const LAUNCH_HISTORY_RETENTION_HOURS = 24 * 7;
 export const API_URL = 'https://ll.thespacedevs.com/2.2.0/launch/upcoming/?limit=30&mode=detailed';
 
 /**
- * Where "Support SpaceWatch" points. Any provider works (Ko-fi, GitHub Sponsors, Stripe payment
- * link, PayPal.me …) — it's just a URL. Leave empty to show the in-app "coming soon" page instead.
+ * Where the Support page's sponsor button goes. Any provider works (GitHub Sponsors, Ko-fi, a
+ * Stripe payment link, PayPal.me …) — it's just a URL.
  */
-export const SUPPORT_URL = '';
+export const SUPPORT_URL = 'https://github.com/sponsors/matthbish?frequency=recurring';
 
 export const REPO_URL = 'https://github.com/matthbish/spacewatch-web';
 

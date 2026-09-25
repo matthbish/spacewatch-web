@@ -38,3 +38,11 @@ test('the support page does not link to itself on mobile, and marks the rail lin
     await expect(visible).toHaveAttribute('aria-current', 'page');
   }
 });
+
+test('the support page sends sponsors to GitHub Sponsors in a new tab', async ({ page }) => {
+  await page.goto('./#/support');
+  const sponsor = page.getByRole('link', { name: 'Sponsor on GitHub (opens in a new tab)' });
+  await expect(sponsor).toHaveAttribute('href', 'https://github.com/sponsors/matthbish?frequency=recurring');
+  await expect(sponsor).toHaveAttribute('target', '_blank');
+  await expect(sponsor).toHaveAttribute('rel', 'noopener noreferrer');
+});

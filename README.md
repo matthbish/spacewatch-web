@@ -75,9 +75,10 @@ caching below.
 ## Support SpaceWatch
 
 A small "Support SpaceWatch" link appears on every page (page footer on mobile, side rail on
-desktop). Set `SUPPORT_URL` in [`src/config.ts`](src/config.ts) to any destination — Ko-fi, GitHub
-Sponsors, a Stripe payment link, PayPal.me — and it links there in a new tab. While it's empty, the
-link opens an in-app page instead. No payment code lives in this repo.
+desktop) and opens the in-app Support page, whose button goes to
+[GitHub Sponsors](https://github.com/sponsors/matthbish) in a new tab. The destination is the single
+`SUPPORT_URL` value in [`src/config.ts`](src/config.ts); swap in Ko-fi, a Stripe payment link,
+PayPal.me, or anything else. No payment code lives in this repo.
 
 ## Development
 

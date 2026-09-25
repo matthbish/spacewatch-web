@@ -1,8 +1,7 @@
 import { PageHeader } from '../components/PageHeader';
-import { REPO_URL } from '../config';
+import { REPO_URL, SUPPORT_URL } from '../config';
 import { Icon } from '../icons';
 
-/** Shown while no donation destination is configured (see SUPPORT_URL in config.ts). */
 export function SupportScreen() {
   return (
     <>
@@ -10,14 +9,17 @@ export function SupportScreen() {
       <div class="prose">
         <Icon name="coffee" class="prose__icon" />
         <p>
-          SpaceWatch is free, open source, and has no ads, accounts, or tracking. A way to chip in toward its upkeep
-          is coming soon.
+          SpaceWatch is free, open source, and has no ads, accounts, or tracking. If it's useful to you, sponsoring
+          helps cover its upkeep and keeps it that way.
         </p>
-        <p>
-          In the meantime, starring the project on GitHub or sharing it with someone who likes watching launches
-          helps just as much.
+        <a class="button" href={SUPPORT_URL} target="_blank" rel="noopener noreferrer" data-testid="sponsor-button">
+          Sponsor on GitHub<span class="sr-only"> (opens in a new tab)</span>
+        </a>
+        <p class="prose__aside">
+          Not in a position to? Starring the project on{' '}
+          <a href={REPO_URL} target="_blank" rel="noopener noreferrer">GitHub</a> or sharing it with someone who likes
+          watching launches helps too.
         </p>
-        <a class="button button--tonal" href={REPO_URL} target="_blank" rel="noopener noreferrer">SpaceWatch on GitHub</a>
       </div>
     </>
   );

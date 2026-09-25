@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/preact';
 import { expect, it } from 'vitest';
 import { SupportLink } from './SupportLink';
 
-it('points to the in-app support page while no destination is configured', () => {
+it('leads to the in-app support page, not straight off-site', () => {
   render(<SupportLink />);
   const link = screen.getByRole('link', { name: 'Support SpaceWatch' });
   expect(link.getAttribute('href')).toBe('#/support');
